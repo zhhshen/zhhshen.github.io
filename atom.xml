@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-02-07T12:08:33.000Z</updated>
+  <updated>2018-02-26T03:16:40.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>js实现手机号码加密</title>
+    <link href="http://yoursite.com/2018/02/26/js%E5%AE%9E%E7%8E%B0%E6%89%8B%E6%9C%BA%E5%8F%B7%E7%A0%81%E5%8A%A0%E5%AF%86/"/>
+    <id>http://yoursite.com/2018/02/26/js实现手机号码加密/</id>
+    <published>2018-02-26T03:10:12.000Z</published>
+    <updated>2018-02-26T03:16:40.000Z</updated>
+    
+    <content type="html"><![CDATA[<script src="/assets/js/APlayer.min.js"> </script><p>js实现手机号码中间几位加<em>， 例如13812346789 替换为138<em>*</em></em>6789</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">vaildTel</span>(<span class="params">s</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> obj = s.match(<span class="regexp">/((((13[0-9])|(15[^4])|(18[0,1,2,3,5-9])|(17[0-8])|(147))\d&#123;8&#125;)|((\(\d&#123;3,4&#125;\)|\d&#123;3,4&#125;-|\s)?\d&#123;7,14&#125;))?/g</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> tel</span><br><span class="line">    <span class="keyword">var</span> trueTel</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> item <span class="keyword">in</span> obj)&#123;</span><br><span class="line">        tel = obj[item]</span><br><span class="line">        <span class="keyword">if</span>(tel &amp;&amp; tel.length == <span class="number">11</span>)&#123;</span><br><span class="line">            trueTel = tel.substr(<span class="number">0</span>, <span class="number">3</span>) + <span class="string">'****'</span> + tel.substr(<span class="number">7</span>)</span><br><span class="line">            s=s.replace(tel,trueTel)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> s</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;script src=&quot;/assets/js/APlayer.min.js&quot;&gt; &lt;/script&gt;&lt;p&gt;js实现手机号码中间几位加&lt;em&gt;， 例如13812346789 替换为138&lt;em&gt;*&lt;/em&gt;&lt;/em&gt;6789&lt;/p&gt;
+&lt;figure class=&quot;highlight
+      
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>node上传文件到七牛云</title>
