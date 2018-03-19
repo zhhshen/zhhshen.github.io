@@ -1,0 +1,304 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> raphael类库学习 · zhhshen de blog</title><meta name="description" content="raphael类库学习 - zhh Shen"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.png"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="http://yoursite.com/atom.xml" title="zhhshen de blog"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="https://weibo.com/mujiaxiansheng" target="_blank" class="nav-list-link">WEIBO</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">raphael类库学习</h1><div class="post-info">Jun 22, 2017</div><div class="post-content"><script src="/assets/js/APlayer.min.js"> </script><p>Raphael Javascript是一个 Javascript的矢量库。<br>它可以处理SVG、VML格式的矢量图，它使用SVG W3C推荐标准和VML作为创建图形的基础，你可以用Javascript 操作Dom 很容易的创建出复杂的柱状图、走势图、曲线图等各种图表，可以画图，可以画出任意复杂度的图像，以及图表或图像裁剪和旋转等复杂操作。<br><a id="more"></a></p>
+<h4 id="创建画布"><a href="#创建画布" class="headerlink" title="创建画布"></a>创建画布</h4><p>##在浏览器窗口中初始化画布<br>语法：</p>
+<pre><code>//Raphael function中4个参数分别是x坐标、y坐标、宽度、高度。
+var raphaelObj = Raphael(x,y,width,height);   
+</code></pre><p>// 因为这个是在浏览器视口里面来创建的，所以画布的位置是绝对定位。因此，它会在所有html元素下面重叠。</p>
+<p>#####在元素中创建Raphael对象(推荐)</p>
+<p>要在一个元素中初始化一个Raphael对象，我们必须把这个元素的ID或者这个元素本身加入到坐标系(x,y)中。</p>
+<pre><code>//  初始化一个宽320高320的画布
+let paper  = Raphael(document.getElementById(&quot;chart-wrap&quot;), 320, 320)
+</code></pre><p>一  画布的方法</p>
+<h6 id="1-绘制圆形circle-x-y-r"><a href="#1-绘制圆形circle-x-y-r" class="headerlink" title="1  绘制圆形circle(x, y, r)"></a>1  绘制圆形circle(x, y, r)</h6><pre><code>var cir = paper.circle(x,y,r);
+</code></pre><p>参数含义：<br>    x:  圆心X轴坐标<br>    y:  圆心Y轴坐标<br>    r:  圆的半径</p>
+<h6 id="2-矩形rect"><a href="#2-矩形rect" class="headerlink" title="2  矩形rect()"></a>2  矩形rect()</h6><p>我们可以使用rect()方法来创建一个矩形。这个方法一共有4个必须参数和一个可选参数。5个参数含义分别是:<br>  x坐标、y坐标、矩形宽度、矩形高度、圆角半径（可选）。其中最后一个参数圆角半径默认为0，为可选参数。</p>
+<pre><code>var rect = paper.rect(x，y，width, height, border-radius(可选));
+</code></pre><h6 id="3-椭圆ellipse"><a href="#3-椭圆ellipse" class="headerlink" title="3 椭圆ellipse()"></a>3 椭圆ellipse()</h6><p>椭圆的方法是ellipse(),有4个必要参数。分别是x坐标、y坐标、水平半径、垂直半径。水平半径和垂直半径其实就是椭圆的宽和高除以2。</p>
+<pre><code>var ellipse = paper.ellipse(x,  y,  rx, ry)
+</code></pre><p>回顾我们中学数学中的知识：<br><img src="http://latex.codecogs.com/png.latex?\frac{x^2 }{a^2}+\frac{y^2 }{b^2}\leqslant 1" alt=""></p>
+<p>其中a, b分别给椭圆的长短半径</p>
+<h6 id="4-复杂图形path"><a href="#4-复杂图形path" class="headerlink" title="4 复杂图形path()"></a>4 复杂图形path()</h6><p>path()方法。它只有一个参数，我们称它为:<br>        pathString(一串字母和数字的组合)</p>
+<p>在这之前，我们先想象一下自己画复杂图形的场景。其实你拿一支笔在纸上画画的话，就好像你从一个起点开始，不断的连线到构成你的图画。其实这里的机制就是如此，通过线的连接来构成复杂图形，连线可以使直线也可以是曲线。</p>
+<pre><code>var path = paper.path([pathString])
+</code></pre><p>路径字符串由一个或多个命令组成。每个命令以一个字母开始，随后是逗号（“,”）分隔的参数</p>
+<p>但是命令有大小写的区别，其效果也不同。大写表示绝对，小写为相对。比如(M20,20)表示从（0,0)位置来计算的，而(m20,20)则是相对画笔的位置（dom位置）来计算。</p>
+<p>常用的几个命令：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">命令</th>
+<th style="text-align:center">名称</th>
+<th style="text-align:center">参数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">M</td>
+<td style="text-align:center">移动到(move To)</td>
+<td style="text-align:center">(x, y)+</td>
+</tr>
+<tr>
+<td style="text-align:center">Z</td>
+<td style="text-align:center">闭合路径(closepath)</td>
+<td style="text-align:center">(none)</td>
+</tr>
+<tr>
+<td style="text-align:center">L</td>
+<td style="text-align:center">直线(lineTo)</td>
+<td style="text-align:center">(x, y)+</td>
+</tr>
+<tr>
+<td style="text-align:center">H</td>
+<td style="text-align:center">水平直线</td>
+<td style="text-align:center">x+</td>
+</tr>
+<tr>
+<td style="text-align:center">V</td>
+<td style="text-align:center">垂直直线</td>
+<td style="text-align:center">y+</td>
+</tr>
+<tr>
+<td style="text-align:center">C</td>
+<td style="text-align:center">曲线(curveTo)</td>
+<td style="text-align:center">(x1, y1,x2, y2, x, y )+</td>
+</tr>
+<tr>
+<td style="text-align:center">S</td>
+<td style="text-align:center">平滑曲线</td>
+<td style="text-align:center">(x2, y2, x, y)+</td>
+</tr>
+<tr>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">二次贝塞尔曲线</td>
+<td style="text-align:center">(x1, y1, x, y)+</td>
+</tr>
+<tr>
+<td style="text-align:center">T</td>
+<td style="text-align:center">平滑二次贝塞尔曲线</td>
+<td style="text-align:center">(x, y)+</td>
+</tr>
+<tr>
+<td style="text-align:center">A</td>
+<td style="text-align:center">椭圆弧</td>
+<td style="text-align:center">(rx ry x-axis-rotation large-arc-flag sweep-flag x y)+</td>
+</tr>
+</tbody>
+</table>
+<pre><code> var paper = Raphael(document.getElementById(&quot;chart-wrap&quot;), 700, 600);  
+//1、直线使用path命令L  
+paper.path(&quot;M20,20L100,20z&quot;).attr({  
+  &quot;fill&quot;: &quot;#5DDEF4&quot;,  
+  &quot;stroke&quot;: &quot;#2A6570&quot;,  
+  &quot;stroke-width&quot;: 2  
+});  
+//2、三角形使用Path命令L  
+paper.path(&quot;M130,30 L200,30 L160,90 z&quot;).attr({  
+  &quot;fill&quot;: &quot;#5DDEF4&quot;,  
+  &quot;stroke&quot;: &quot;#2A6570&quot;,  
+  &quot;stroke-width&quot;: 2  
+});  
+//3、T形使用Path命令H,V  
+paper.path(&quot;M 40,40 H 90 V 60 H 70 V 110 H 60 V 60 H 40 z&quot;).attr({  
+  &quot;fill&quot;: &quot;#5DDEF4&quot;,  
+  &quot;stroke&quot;: &quot;#2A6570&quot;,  
+  &quot;stroke-width&quot;: 2  
+});  
+//4、2次贝塞尔曲线形，使用path命令Q  
+paper.path(&quot;M240,40L300,40L300,100&quot;);  
+paper.path(&quot;M240,40Q300,40 300,100&quot;).attr(&apos;stroke&apos;, &apos;red&apos;);  
+//5、2次贝塞尔曲线形，使用path命令Q和T（第一个是正常绘制，第二个光滑连接）    
+paper.path(&apos;M10,250 L90,130 L160,160 L250,190 L250,70&apos;);  
+paper.path(&apos;M10,250 Q90,130 160,160 T250,70&apos;).attr(&apos;stroke&apos;, &apos;red&apos;);  
+
+//6、绘制3次贝赛尔曲线，使用命令C，平滑画线使用命令S  
+paper.path(&apos;M320,120 L350,180 L450,260 L480,140&apos;);
+</code></pre><p>这里重点解释下最后一个path绘制椭圆弧，这里小伙伴可能有一个疑问，这个椭圆弧和上面讲的ellipse() 方法有什么区别，这个好理解，ellipse()方法只是这其中的一种特例， 总之，<strong>path绘制椭圆弧包含ellipse() 方法的功能</strong>。</p>
+<p>椭圆弧的参数详解如下：<br>    参数含义：</p>
+<pre><code>rx：横轴的长度；
+
+ry：纵轴的长度；
+
+x-axis-rotation：椭圆的横轴与x轴的角度；
+
+large-arc-flag：区分弧度的大小（0表示小角度弧度，1表示大角度弧度）；
+
+sweep-flag：绘制弧度围绕椭圆中心的方向（0表示逆时针方向，1表示顺时针方向）；
+
+x y：椭圆曲线终点坐标；
+</code></pre><p>详细可查看<a href="http://lblovesnow-163-com.iteye.com/blog/1485388" target="_blank" rel="noopener">http://lblovesnow-163-com.iteye.com/blog/1485388</a></p>
+<h6 id="6-text"><a href="#6-text" class="headerlink" title="6 text()"></a>6 text()</h6><p>text()，是用来显示文字内容的方法。语法其实很简单，就是x,y坐标和文字内容。</p>
+<pre><code>// 语法
+let text = paper.text(x, y,  &quot;Raphael JS Text&quot;);
+//  例子
+let text = paper.text(300, 300,  &apos;Raphael设置文本&apos;).attr({
+    &apos;fill&apos;: &apos;#17A9C6&apos;,
+    &apos;font-size&apos;: &apos;20px&apos;,
+    &apos;text-anchor&apos;: &apos;start&apos;,
+    &apos;font-family&apos;: &apos;century gothic&apos;
+ })
+</code></pre><p>text-anchor属性表明文字与坐标的关系，是从这个坐标开始、为中心还是为结尾。属性值可以设置 “start”, “middle” or “end” 默认”middle”。</p>
+<h6 id="7-Raphael元素的变换"><a href="#7-Raphael元素的变换" class="headerlink" title="7 Raphael元素的变换"></a>7 Raphael元素的变换</h6><p>Raphael其实提供了好几个方法供大家调用来变换元素，但是其中几个的方法都是不推荐的。唯一推荐的元素变换方法是transform()方法。transform方法的参数与上篇最后的path命令串很相似，只不过这是transform命令串。它有4个命令：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">参数</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">T</td>
+<td style="text-align:center">移动</td>
+</tr>
+<tr>
+<td style="text-align:center">S</td>
+<td style="text-align:center">缩放</td>
+</tr>
+<tr>
+<td style="text-align:center">R</td>
+<td style="text-align:center">按角度变换</td>
+</tr>
+<tr>
+<td style="text-align:center">M</td>
+<td style="text-align:center">变换矩阵</td>
+</tr>
+</tbody>
+</table>
+<p>比如：”t100,100r30,100,100s2,2,100,100r45s1.5”</p>
+<p>也有另类的“绝对”平移、旋转和缩放：T、R和S。他们不会考虑到以前的变换。例如：…T100,0总会横向移动元素100px，而…t100,0会移动垂直移动如果之前有r90，则发生了垂直移动，这个后面会有强调。上面的例子可以读作“平移100,100；围绕100,100旋转30°；围绕100,100缩放两倍；围绕中心旋转45°；相对中心缩放1.5倍“。正如你可以看到旋转和缩放命令的原点坐标为可选参数，默认的是该元素的中心点。</p>
+<p>有一点需要注意，transform方法并不改变元素本身的任何状态！无论你平移多少，transform执行后你获得坐标信息仍旧创建元素时的坐标，但是transform的参数在变化。也就是transform的内容是你可以获得的。无论你执行多少次transform，它保存着现在状态和创建状态之间的转换内容，其实transform就是元素本身的一个属性，而不是去改变元素的其它属性。</p>
+<pre><code>let rect1 = paper.rect(100, 20, 80, 40).attr({
+  &apos;stroke&apos;: &apos;rgb(92, 215, 120)&apos;
+})
+let rect2 = paper.rect(100, 70, 80, 40, 20).attr({
+  &apos;stroke&apos;: &apos;rgb(255, 130, 121)&apos;
+})
+let rect3 = paper.rect(100, 20, 80, 40).attr({
+    &apos;stroke&apos;: &apos;rgb(92, 215, 120)&apos;// border color of the rectangle
+}).transform(&apos;r90t100, 0&apos;)
+let rect4 = paper.rect(100, 70, 80, 40, 20).attr({
+    &apos;stroke&apos;: &apos;rgb(255, 130, 121)&apos;// border color of the rectangle
+}).transform(&apos;r90T100, 0&apos;)
+</code></pre><p>绝对，就是无论其它什么变换我都不管不顾只会去执行我后面紧跟的参数，所以T执行的是不管你前面转了90度还是没转，我都x轴平移100px。而相对，则是我转了90度，我的头部（假设元素都有一个头部）本来朝右变成了朝下，x轴平移100px，好吧我向着x平移100px，但是实际是去y轴平移了100px，因为我本来指向x轴的头部变成了y轴方向。<br>但是不论是不是发生了变换，并不改变元素的本身其它属性。</p>
+<h6 id="8-Raphael图形的动画效果"><a href="#8-Raphael图形的动画效果" class="headerlink" title="8 Raphael图形的动画效果"></a>8 Raphael图形的动画效果</h6><p>Raphael的图形动画效果可以达到非常平滑的程度，并且任何属性都可以，不论是颜色、透明度、宽度、高度还是其它细节。<br>四个参数：<br>     动画属性键值对，  动画时间， 缓动类型，回调函数<br>语法：</p>
+<pre><code>Element.animate({动画属性的键值对},  动画时间,缓动类型,回调函数);
+</code></pre><h6 id="Raphael元素的常用事件"><a href="#Raphael元素的常用事件" class="headerlink" title="Raphael元素的常用事件"></a>Raphael元素的常用事件</h6><pre><code>let rect3 = paper.rect(100, 20, 80, 40).attr({
+    &apos;stroke&apos;: &apos;rgb(92, 215, 120)&apos;// border color of the rectangle
+}).transform(&apos;r90t100, 0&apos;)
+let rect4 = paper.rect(100, 70, 80, 40, 20).attr({
+    &apos;stroke&apos;: &apos;rgb(255, 130, 121)&apos;// border color of the rectangle
+}).transform(&apos;r90T100, 0&apos;)
+
+// 元素事件绑定
+rect3.click(function(){
+  alert(&apos;点击事件&apos;);
+});
+rect4.mouseover(function(){
+ alert(&apos;mouseover事件&apos;);
+});
+</code></pre><p>常用事件如下， 具体查看<a href="http://dmitrybaranovskiy.github.io/raphael/reference.html#Element.insertBefore" target="_blank" rel="noopener">官方文档</a></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">事件名</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">click</td>
+<td style="text-align:center">单击事件</td>
+</tr>
+<tr>
+<td style="text-align:center">dbclick</td>
+<td style="text-align:center">双击事件</td>
+</tr>
+<tr>
+<td style="text-align:center">mousedown</td>
+<td style="text-align:center">鼠标按下</td>
+</tr>
+<tr>
+<td style="text-align:center">mouseup</td>
+<td style="text-align:center">鼠标释放</td>
+</tr>
+<tr>
+<td style="text-align:center">mousemove</td>
+<td style="text-align:center">鼠标移动</td>
+</tr>
+<tr>
+<td style="text-align:center">mouseover</td>
+<td style="text-align:center">鼠标进入元素时触发，这里需要说明，mouseover()和上面mousemove()的区别，你从外面移动到一个Raphael元素时，两个方法都可以触发事件。但是如果你把事件执行完成，继续移动鼠标（假设此时鼠标光标还在元素中），mouseover()将不再继续执行事件，而mousemove() 会持续触发事件。</td>
+</tr>
+<tr>
+<td style="text-align:center">mouseout</td>
+<td style="text-align:center">mouseout()方法触发为鼠标移出一个Raphael元素时，它只有在移出时触发，进入不触发。</td>
+</tr>
+</tbody>
+</table>
+<h6 id="10-Raphael中常用的方法"><a href="#10-Raphael中常用的方法" class="headerlink" title="10 Raphael中常用的方法"></a>10 Raphael中常用的方法</h6><p>  <strong>clone()</strong></p>
+<p>clone()方法是克隆一个Raphael时调用的。有个小伙伴可能会问，那我直接var newrect=rect;难道不行吗？实际上是不行的，因为newrect实际只是一个指向老rect的”快捷方式”，它并不会创建一个新的Dom。</p>
+<pre><code>//下面这个是我们想要的效果的代码：  
+let newrect=rect.clone().attr({&quot;x&quot;:50,&quot;y&quot;:50});  
+ //而不是这个：  
+let newrect=rect.attr({&quot;x&quot;:50,&quot;y&quot;:50});
+</code></pre><p><strong>data()</strong></p>
+<p>data()方法是个不可思议的方法。你可以根据自己需要为Raphael元素赋予你想赋予的含义，并且在需要时取回来：</p>
+<pre><code>newrect.data({  
+  &quot;name&quot;: &quot;heihei&quot;,  
+  &quot;age&quot;:2  
+});  
+newrect.click(function(){  
+  alert(newrect.data(&quot;age&quot;));  
+});  
+</code></pre><p>我们可以随意赋予元素它要装载的内容，在需要的时候拿回来。这个功能非常灵活，你可以随意设计关键词，当你需要为用户展现鼠标移过展现内容时就可以用这个。当然有了这个为元素添加data的方法就肯定有移出的方法。</p>
+<p><strong>removeData ()</strong></p>
+<p>与上面的为元素添加内容相反，removeData()方法是移出已经添加了的内容：</p>
+<pre><code>newrect.removeData(&quot;age&quot;);  
+</code></pre><p><strong>getBBox()</strong></p>
+<p>getBBox()方法获得一个Raphael元素的边界框（我把它成为包围盒）。其实应该就是能包围元素的最小矩形。getBBox()有个参数isWithoutTransform，值是true或者false。参数含义是获得的边界框是在执行transform也就是变换之前的元素还是变换后的。默认是false，意思是转换后的，也就是你不设置里面参数为true，它获得的包围盒就是转换之后的.</p>
+<p><strong> getPointAtLength()</strong><br>getPointAtLength()方法在给定的path对象和指定的长度，返回那个位置点的坐标</p>
+<p>path.getPointAtLength(length)</p>
+<p><strong>toFront() 、toBack() 、hide() 、show() 、remove()</strong><br>这里我们有5个方法一起讲解。这5个方法都没有参数，也就是 元素.方法()，就行了. 类似于jquery中元素的操作<br>toFront()到前面来，toBack()与toFront()相反，到后面去；hide()和show()相反，分别是隐藏和显示；remove()删除。</p>
+<h5 id="画布的另外几种常用的方法"><a href="#画布的另外几种常用的方法" class="headerlink" title="画布的另外几种常用的方法"></a>画布的另外几种常用的方法</h5><p><strong>paper.clear()</strong></p>
+<p>paper.clear()方法清空画布，还记得上面元素方法里面有个remove(）方法吧。那个是单个去除一个元素，这里是画布来调用清除所有元素的方法。</p>
+<p><strong>paper.image()</strong><br>这里说明一下，RaphaelJS确实是个非常优秀的前台图形绘制工具，但是不要以为它可以替代图片。其它普通图片和Raphael是互补的，而不是可以替代的关系。所以Raphael提供了引用图片的方法，就是paper.image()。它有5个参数<br>paper.image(src, x, y, width, height)</p>
+<p><strong> paper.setSize()</strong><br>paper.setSize()用来重新设置画布的大小。你可以在发现画布大小不合适时调整画布的大小而不是需要从头建立画布然后重复原来的工作。方法有2个参数：宽和高</p>
+<pre><code>paper.setSize(600,800);  
+</code></pre><p><strong>paper.set()</strong></p>
+<p>paper.set()方法是个很重要的方法。它帮助我们对Raphael元素进行分组然后进行批量管理。也就是我们放进一个set里面的Raphael元素如果用set来执行一些动作，那么这些操作是所有在set里面的元素一起起作用的。但是set本身并不创建和复制、克隆Raphael元素，也就是你删除一个set，不会删除set里面的Raphael元素，但是你可以用set来帮助管理set内的元素。我们贴个代码看看：</p>
+<pre><code>var paper = Raphael(&quot;my-canvas&quot;, 650, 400);  
+ var rect = paper.rect(20, 20, 60, 40).attr({  
+  &quot;stroke&quot;: &quot;red&quot;, // border color of the rectangle   
+});  
+var rect1 = paper.rect(20, 70, 60, 40, 20).attr({  
+  &quot;stroke&quot;: &quot;yellow&quot;, // border color of the rectangle   
+});  
+var cir = paper.circle(150, 100, 30);  
+var raphaelSet = paper.set();  
+raphaelSet.push(rect, rect1, cir);  
+raphaelSet.attr({  
+  &quot;fill&quot;: &quot;red&quot;  
+});  
+</code></pre><p><strong>set的方法</strong><br>接下来讲解的方法是只有set对象才能调用的方法，前面我们已经提到了set对象的声明：</p>
+<pre><code>var raphaelSet = paper.set();  
+</code></pre><p><strong>set.clear()</strong></p>
+<p>我们想要清空set，可不要用remove()而是用clear()，remove()会把所有set里面的元素remove掉。clear()只是清除set里的内容，并不会对里面的内容本身有影响。那就会有同鞋问，我不想清空set，只想删除其中一个可以吗？当然是可以的。那就是下个方法了。</p>
+<p><strong>set.exclude()</strong></p>
+<p>set.exclude(rect);还记得我前面的代码里面将rect添加进入raphaelSet里面吗?现在你可以试一试在在执行raphaelSet.attr()之前使用raphaelSet.exclude(rect);试一试。效果和我们想象的一样，第一个矩形没有被填充红色，因为它被从set里面剔除出来了。</p>
+<p><strong>set.forEach()</strong><br>看到forEach关键词，我们立即就能理解到这个方式是干什么用的。那就是日常开发中最常碰到的循环。set.forEach()就是去循环我们创建的set对象，然后通过遍历对set内的元素进行操作。这个功能是差不多算是set里面最重要的方法了，我们使用set大部分业务都需要这个循环了。</p>
+<pre><code>raphaelSet.forEach(function(ele){  
+  ele.attr({&quot;fill&quot;,&quot;red&quot;});  
+});  
+</code></pre><p>这句代码的效果大家可以试一试，可以替换我们刚才那个raphaelSet.attr({“fill”,”red”});</p>
+<p><strong>set.pop()</strong></p>
+<p>弹出set中的最后一个元素，就是清除最后一个添加进去的元素。</p>
+<pre><code>raphaelSet.push(rect, rect1, cir);  
+raphaelSet.pop();  
+raphaelSet.attr({  
+  &quot;fill&quot;: &quot;red&quot;  
+});  
+</code></pre><p>我们上面贴的那个代码，修改成为这段，就会发现圆形并没有被填充红色，因为在执行填充之前，它已经被从set里面pop了出来。</p>
+<p><strong>set.splice()</strong></p>
+<p>set.splice()方法和普通的js或者java的数据的slice有点不同。它有3个参数index,count,element。什么意思呢？set.splice(1,2,rect)，我从set里面index为1的位置开始往后删除2个元素，然后把rect添加进来。所以slice可以同时删除和添加元素。注释它是有返回值的，它将返回被删除掉的元素。</p>
+<p>本文大部分内容来自文章结尾参考资料中的内容，只是做了部分删减整理。</p>
+<p>参考资料：<br>1  <a href="https://github.com/DmitryBaranovskiy/raphael" target="_blank" rel="noopener">raphael  github地址</a><br>2  <a href="http://dmitrybaranovskiy.github.io/raphael/" target="_blank" rel="noopener">raphael官方文档</a><br>3  <a href="http://blog.csdn.net/witsonx/article/details/52386277" target="_blank" rel="noopener">快速上手RaphaelJS</a><br>4 <a href="http://www.jianshu.com/p/81c3fc5287d1" target="_blank" rel="noopener">http://www.jianshu.com/p/81c3fc5287d1</a></p>
+</div></article></div></main><footer><div class="paginator"><a href="/2018/02/01/node上传文件到七牛云/" class="prev">PREV</a><a href="/2017/06/01/vue2-中实现动态表单增删改查/" class="next">NEXT</a></div><div class="copyright"><p>© 2015 - 2018 <a href="http://yoursite.com">zhh Shen</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-65933410-1",'auto');ga('send','pageview');</script></body></html>
